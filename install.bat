@@ -15,24 +15,25 @@ echo {"main_module":"worker.js","bindings":[{"type":"secret_text","name":"PROXY_
 
 echo.
 echo 1/3 Deploying script to Cloudflare...
-curl -s -X PUT "https://api.cloudflare.com/client/v4/accounts/%CF_ACCOUNT_ID%/workers/scripts/%WORKER_NAME%" -H "Authorization: Bearer %CF_API_TOKEN%" -F "metadata=@meta.json;type=application/json" -F "script=@worker.js;type=application/javascript+module" > deploy_log.txt
+curl -s -X PUT "https://api.cloudflare.com/client/v4/accounts/!CF_ACCOUNT_ID!/workers/scripts/!WORKER_NAME!" -H "Authorization: Bearer !CF_API_TOKEN!" -F "metadata=@meta.json;type=application/json" -F "script=@worker.js;type=application/javascript+module" > deploy_log.txt
 
 echo 2/3 Enabling public workers.dev URL...
-curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/%CF_ACCOUNT_ID%/workers/scripts/%WORKER_NAME%/subdomain" -H "Authorization: Bearer %CF_API_TOKEN%" -H "Content-Type: application/json" -d "{\"enabled\":true}" > publish_log.txt
+curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/!CF_ACCOUNT_ID!/workers/scripts/!WORKER_NAME!/subdomain" -H "Authorization: Bearer !CF_API_TOKEN!" -H "Content-Type: application/json" -d "{\"enabled\":true}" > publish_log.txt
 
 echo 3/3 Fetching your Cloudflare subdomain...
-curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/%CF_ACCOUNT_ID%/workers/subdomain" -H "Authorization: Bearer %CF_API_TOKEN%" > sub_log.txt
+curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/!CF_ACCOUNT_ID!/workers/subdomain" -H "Authorization: Bearer !CF_API_TOKEN!" > sub_log.txt
 
 REM Safe JSON extraction of subdomain
-for /f %%a in ('powershell -NoProfile -Command "(Get-Content sub_log.txt | ConvertFrom-Json).result.subdomain" 2^>nul') do set SUBDOMAIN=%%a
+set SUBDOMAIN=
+for /f "usebackq tokens=*" %%a in (`powershell -NoProfile -Command "(Get-Content sub_log.txt | ConvertFrom-Json).result.subdomain" 2^>nul`) do set SUBDOMAIN=%%a
 
-if "%SUBDOMAIN%"=="" (
+if not defined SUBDOMAIN (
     set SUBDOMAIN=YOUR-SUBDOMAIN
 )
 
 REM Check if deployment was actually successful
 findstr /i "\"success\":false" deploy_log.txt >nul
-if %errorlevel%==0 (
+if !errorlevel! equ 0 (
     echo.
     echo [!] ERROR: Cloudflare rejected the script! API Response:
     type deploy_log.txt
@@ -41,7 +42,7 @@ if %errorlevel%==0 (
     echo.
     echo =========================================
     echo SUCCESS! YOUR DATA FOR LAMPA:
-    echo Worker URL : https://%WORKER_NAME%.%SUBDOMAIN%.workers.dev/proxy
+    echo Worker URL : https://!WORKER_NAME!.!SUBDOMAIN!.workers.dev/proxy
     echo Secret Key : !PROXY_KEY!
     echo =========================================
 )
