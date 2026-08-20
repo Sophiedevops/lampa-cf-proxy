@@ -6,8 +6,9 @@ set /p CF_ACCOUNT_ID="1. Enter Account ID: "
 set /p CF_API_TOKEN="2. Enter API Token: "
 set WORKER_NAME=cherry-proxy-lampa
 
-REM Generate a random secret key
-set PROXY_KEY=%RANDOM%%RANDOM%%RANDOM%%RANDOM%%RANDOM%
+REM Generate a random 8-digit secret key (easy for TV remote)
+set RAND_STR=%RANDOM%%RANDOM%%RANDOM%
+set PROXY_KEY=!RAND_STR:~0,8!
 
 REM Create metadata JSON for bindings
 echo {"main_module":"worker.js","bindings":[{"type":"secret_text","name":"PROXY_KEY","text":"!PROXY_KEY!"}]} > meta.json
@@ -19,14 +20,17 @@ curl -s -X PUT "https://api.cloudflare.com/client/v4/accounts/%CF_ACCOUNT_ID%/wo
 echo Fetching your Cloudflare subdomain...
 curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/%CF_ACCOUNT_ID%/workers/subdomain" -H "Authorization: Bearer %CF_API_TOKEN%" > sub_log.txt
 
-REM Parse subdomain from JSON response
-for /f "tokens=3 delims=:," %%a in ('findstr /i "subdomain" sub_log.txt') do set SUB_RAW=%%a
-set SUBDOMAIN=!SUB_RAW:"=!
+REM Safe JSON extraction of subdomain
+for /f %%a in ('powershell -NoProfile -Command "(Get-Content sub_log.txt | ConvertFrom-Json).result.subdomain" 2^>nul') do set SUBDOMAIN=%%a
+
+if "%SUBDOMAIN%"=="" (
+    set SUBDOMAIN=YOUR-SUBDOMAIN
+)
 
 echo.
 echo =========================================
 echo SUCCESS! YOUR DATA FOR LAMPA:
-echo Worker URL : https://%WORKER_NAME%.!SUBDOMAIN!.workers.dev/proxy
+echo Worker URL : https://%WORKER_NAME%.%SUBDOMAIN%.workers.dev/proxy
 echo Secret Key : !PROXY_KEY!
 echo =========================================
 
