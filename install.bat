@@ -7,7 +7,7 @@ set /p CF_API_TOKEN="2. Enter API Token: "
 set WORKER_NAME=cherry-proxy-lampa
 
 REM Generate a random secret key
-set PROXY_KEY=%RANDOM%
+set PROXY_KEY=%RANDOM%%RANDOM%%RANDOM%%RANDOM%%RANDOM%
 
 REM Create metadata JSON for bindings
 echo {"main_module":"worker.js","bindings":[{"type":"secret_text","name":"PROXY_KEY","text":"!PROXY_KEY!"}]} > meta.json
