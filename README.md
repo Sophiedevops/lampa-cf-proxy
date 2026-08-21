@@ -292,31 +292,4 @@
 Поставьте ⭐ **Star** в правом верхнем углу репозитория, чтобы не потерять инструкцию и поддержать разработчика!
 
 </div><br>
-Если за 15 секунд видео не стартовало, или плеер выдал ошибку (провайдер заблокировал ссылку / 403 Forbidden), скрипт **мгновенно и незаметно** перехватывает поток и пускает его через ваш Cloudflare Worker. На экране появится уведомление: *"Cherry: Прямое подключение не удалось. Запускаем прокси..."*.
-</details>
 
-<details>
-<summary><b>🔽 Ступень 3: Капитуляция (Hands-off)</b></summary>
-   *### ⚡ Быстрый и бесплатный персональный прокси на базе Cloudflare Workers
-
-[![Cloudflare](https://img.shields.io/badge/Cloudflare-Workers-F38020?style=flat-square&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
-[![Lampa](https://img.shields.io/badge/Lampa-Compatible-2196F3?style=flat-square)](https://lampa.mx/)
-[![GitHub Stars](https://img.shields.io/github/stars/YOUR_REPO?style=flat-square&color=yellow)](#)
-[![License](https://img.shields.io/badge/License-MIT-4CAF50?style=flat-square)](LICENSE)
-
-*Обход блокировок балансеров и API в приложении Lampa. Без навыков программирования, консоли и сложных настроек. Всё делается прямо в браузере!*
-
-</div>
-
----
-
-## 📑 Содержание
-- [✨ Особенности](#-особенности)
-- [⚙️ Что потребуется](#-что-потребуется)
-- [🚀 Инструкция по деплою](#-инструкция-по-деплою)
-  - [🟢 Шаг 1. Создание Worker'а](#-шаг-1-создание-workerа)
-  - [💻 Шаг 2. Загрузка кода Cherry Proxy](#-шаг-2-загрузка-кода-cherry-proxy)
-  - [🔐 Шаг 3. Настройка личного пароля](#-шаг-3-настройка-личного-пароля)
-- [📺 Шаг 4. Подключение прокси в Lampa](#-шаг-4-подключение-прокси-в-lampa)
-- [🔄 Обновление кода](#-обновление-кода)
-- [❓ Частые вопросы (FAQ)](
